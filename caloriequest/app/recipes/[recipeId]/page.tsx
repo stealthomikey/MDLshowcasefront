@@ -19,27 +19,22 @@ interface FullMenu {
   ingredients: Ingredient[];
 }
 
-// Define props interface for the page component
-interface MenuPageProps {
-  params: { menuId: string };
-}
-
 // Fetch menu data from the API
 async function fetchMenu(menuId: string): Promise<FullMenu> {
-  const res = await fetch(`http://127.0.0.1:8000/meals/${menuId}`, { cache: 'no-store' });
+  const res = await fetch(`http://127.0.0.1:8000/meals/${menuId}`, { cache: 'no-store' }); // Changed idMeal to menuId
   if (!res.ok) {
-    throw new Error(`Failed to fetch menu with ID ${menuId}`);
+    throw new Error(`Failed to fetch menu with ID ${menuId}`); // Changed idMeal to menuId
   }
   return res.json();
 }
 
 // Page component
-export default async function MenuDetailPage({ params }: MenuPageProps) {
+export default async function MenuDetailPage({ params }: { params: { idMeal: string } }) { // Added type for params
   let menu: FullMenu | null = null;
   let error: string | null = null;
 
   try {
-    menu = await fetchMenu(params.menuId);
+    menu = await fetchMenu(params.idMeal);
   } catch (err) {
     error = err instanceof Error ? err.message : 'An unexpected error occurred';
   }
