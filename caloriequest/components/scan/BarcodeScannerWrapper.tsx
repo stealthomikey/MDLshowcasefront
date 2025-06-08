@@ -41,7 +41,7 @@ export const BarcodeScannerWrapper: React.FC<BarcodeScannerProps> = ({ onScanSuc
       };
 
       const handleError = (errorMessage: string) => {
-        //console.debug(`Scanner frame error: ${errorMessage}`);
+        console.debug(`Scanner frame error: ${errorMessage}`);
       };
 
       newScanner.render(handleSuccess, handleError);

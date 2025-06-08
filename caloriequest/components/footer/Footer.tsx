@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Github, Twitter, Linkedin } from 'lucide-react';
+import { Github, Linkedin } from 'lucide-react';
 import styles from './Footer.module.css';
 
 const Footer = () => {

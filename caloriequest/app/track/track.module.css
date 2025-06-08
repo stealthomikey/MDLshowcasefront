@@ -1,0 +1,126 @@
+/* app/products/products.module.css */
+
+.productsPage {
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 1000px;
+    margin: 30px auto;
+    text-align: center;
+}
+
+.productsPage h1 {
+    color: #007bff;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+}
+
+.productListGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    justify-content: center;
+    align-items: stretch; /* Ensure cards have equal height if content varies */
+}
+
+.productCard {
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.productCard h2 {
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 5px;
+}
+
+.productCard p {
+    margin: 8px 0;
+    color: #555;
+    font-size: 0.95em;
+}
+
+.productCard p strong {
+    color: #333;
+}
+
+.nutritionFacts {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed #ddd;
+    font-size: 0.9em;
+}
+
+.nutritionFacts p {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+}
+
+.nutritionFacts span {
+    font-weight: bold;
+    color: #007bff;
+}
+
+.ownerInfo {
+    margin-top: 15px;
+    font-size: 0.8em;
+    color: #888;
+    text-align: right;
+}
+
+.noProductsMessage {
+    color: #777;
+    font-style: italic;
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    border-radius: 8px;
+    background-color: #fdfdfd;
+}
+
+.noProductsMessage a {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.noProductsMessage a:hover {
+    text-decoration: underline;
+}
+
+.errorMessage, .authErrorMessage {
+    color: #d9534f;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.loginButton, .retryButton {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.loginButton:hover, .retryButton:hover {
+    background-color: #0056b3;
+}

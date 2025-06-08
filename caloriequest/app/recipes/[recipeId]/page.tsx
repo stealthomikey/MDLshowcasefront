@@ -2,7 +2,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { headers } from 'next/headers'; 
-import { ChefHat, Link as LinkIcon, ArrowLeft } from 'lucide-react';
+import { ChefHat, Link as ArrowLeft } from 'lucide-react';
 import styles from './recipeDetail.module.css';
 
 // define the structure of the ingredients and recipe data from the api

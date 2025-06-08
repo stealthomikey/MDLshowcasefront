@@ -1,105 +1,129 @@
-// use client to enable client-side rendering while developing
+// app/scan/page.tsx
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import type { FoodProduct } from '@/types/index';
 import { ProductDisplayCard } from '@/components/scan/ProductDisplayCard';
 import { BarcodeScannerWrapper } from '@/components/scan/BarcodeScannerWrapper';
+// Import your new hook
+import { useProductCreationAndLogging } from '@/hooks/useProductCreationAndLogging'; 
 import styles from './scan.module.css';
 
+// It's good practice to have a common place for your API base URL (can be moved to a config file)
+const API_BASE_URL = 'http://127.0.0.1:8000'; // IMPORTANT: Update this to your Render API URL (e.g., https://your-api-name.onrender.com)
 
 export default function ScanPage() {
-  // create state to store the scanned product data.
-  const [product, setProduct] = useState<FoodProduct | null>(null);
-  // create state to manage the loading state
-  const [loading, setLoading] = useState(false);
-  // create a state to manage errors
-  const [error, setError] = useState<string | null>(null);
-  // create a state to check is the scan is complete
-  const [scanComplete, setScanComplete] = useState(false);
+    const [product, setProduct] = useState<FoodProduct | null>(null);
+    const [loadingProductFetch, setLoadingProductFetch] = useState(false);
+    const [error, setError] = useState<string | null>(null); // Error for fetching product data
+    const [scanComplete, setScanComplete] = useState(false);
 
-  // send the scanned barcode to the backend to fetch product data
-  const handleScan = async (barcode: string) => {
-    // stop multiple concurrent scans.
-    if (loading) return;
-    
-    // when scan is complete hide the camera view
-    setScanComplete(true);
-    // show the loading state
-    setLoading(true);
-    // remove all errors
-    setError(null);
-    // ensure no product data is there
-    setProduct(null);
+    // Use the new hook for product creation and meal logging
+    const { loading: loadingProductAction, error: productActionError, createAndLogProduct } = useProductCreationAndLogging();
 
-    try {
-      // send request to the api to get product data by barcode
-      const res = await fetch(`http://127.0.0.1:8000/products/${barcode}`);
-      // if product doesnt exist give a 404 error
-      if (res.status === 404) {
-        throw new Error(`Product with barcode ${barcode} not found.`);
-      }
-      // other error handling
-      if (!res.ok) {
-        throw new Error('Failed to fetch product data from the server.');
-      }
-      // put the reponse data into the FoodProduct type
-      const data: FoodProduct = await res.json();
-      // Set the fetched product data to state.
-      setProduct(data);
-    } catch (err: any) {
-      // get errors that may happen
-      setError(err.message);
-    } finally {
-      // set loading to false on completion
-      setLoading(false);
-    }
-  };
+    // Default quantity for logging a meal. You might want to allow user input here.
+    const DEFAULT_MEAL_QUANTITY_GRAMS = 100; 
 
-  // had issue with dual scanner so just gonna refresh the page to reset the scanner 
-  const resetScanner = () => {
-    // reload the window
-    window.location.reload();
-  };
+    // handleScan logic (remains mostly the same for fetching product info from barcode)
+    const handleScan = useCallback(async (barcode: string) => {
+        // Prevent new scan if already fetching or performing a database action
+        if (loadingProductFetch || loadingProductAction) return;
 
-  return (
-    <main className="container">
-      <div className={styles.scanPage}>
-        <h1>Scan a Product Barcode</h1>
-        <p className={styles.subtitle}>Hold a product's barcode up to the camera.</p>
-        
-        <div className={styles.scannerContainer}>
-          {!scanComplete && (
-            // while scanning keep window open
-              <div className={styles.scannerWrapper}>
-                <BarcodeScannerWrapper onScanSuccess={handleScan} />
-              </div>
-          )}
-          
-          {/* loading overlay */}
-          {loading && <div className={styles.overlay}><p className={styles.statusText}>Searching for product...</p></div>}
-          
-          {/* error dispaly */}
-          {error && (
-            <div className={styles.overlay}>
-              <div className={styles.statusText}>
-                <p><strong>Error:</strong> {error}</p>
-                {/* Button to scan new product*/}
-                <button onClick={resetScanner} className={styles.scanAgainButton}>Scan Again</button>
-              </div>
+        setScanComplete(true);
+        setLoadingProductFetch(true);
+        setError(null); // Clear previous errors (including those from database actions)
+        setProduct(null);
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/products/${barcode}`, {
+                credentials: 'include',
+            });
+
+            if (res.status === 404) {
+                throw new Error(`Product with barcode ${barcode} not found. You can add it, then log a meal.`);
+            }
+            if (!res.ok) {
+                const errorData = await res.json();
+                throw new Error(errorData.detail || 'Failed to fetch product data.');
+            }
+            const data: FoodProduct = await res.json();
+            setProduct(data);
+        } catch (err: any) {
+            console.error("Error during product fetch:", err);
+            setError(err.message);
+        } finally {
+            setLoadingProductFetch(false);
+        }
+    }, [loadingProductFetch, loadingProductAction]); // Dependencies updated to reflect changes
+
+    // Determine which error to display
+    const displayError = error || productActionError;
+
+    // Handler for the "Add Product & Log Meal" button click
+    const onAddProductAndLogMealClick = useCallback(async () => {
+        if (!product) {
+            setError("No product data to process. Scan a product first.");
+            return;
+        }
+
+        // Call the hook's function to perform the combined actions
+        await createAndLogProduct(product, DEFAULT_MEAL_QUANTITY_GRAMS);
+
+        // Reset UI after actions, if no new error from the action itself
+        if (!productActionError) { // Only reset product/scanner if database action was successful (or no new error emerged)
+            setProduct(null);
+            setScanComplete(false); // Show scanner again
+        }
+    }, [product, createAndLogProduct, DEFAULT_MEAL_QUANTITY_GRAMS, productActionError]); // Dependencies
+
+    // Resets the scanner by reloading the page
+    const resetScanner = useCallback(() => {
+        window.location.reload();
+    }, []);
+
+    return (
+        <main className="container">
+            <div className={styles.scanPage}>
+                <h1>Scan a Product Barcode</h1>
+                <p className={styles.subtitle}>Hold a product's barcode up to the camera.</p>
+
+                <div className={styles.scannerContainer}>
+                    {!scanComplete && (
+                        <div className={styles.scannerWrapper}>
+                            <BarcodeScannerWrapper onScanSuccess={handleScan} />
+                        </div>
+                    )}
+
+                    {loadingProductFetch && (
+                        <div className={styles.overlay}>
+                            <p className={styles.statusText}>Searching for product...</p>
+                        </div>
+                    )}
+
+                    {displayError && (
+                        <div className={styles.overlay}>
+                            <div className={styles.statusText}>
+                                <p><strong>Error:</strong> {displayError}</p>
+                                <button onClick={resetScanner} className={styles.scanAgainButton}>Scan Again</button>
+                            </div>
+                        </div>
+                    )}
+                </div>
+
+                {product && (
+                    <div className={styles.resultsSection}>
+                        <ProductDisplayCard product={product} />
+                        <button
+                            onClick={onAddProductAndLogMealClick}
+                            className={styles.addProductButton}
+                            disabled={loadingProductAction} // Use loading state from hook
+                        >
+                            {loadingProductAction ? 'Processing...' : 'Add Product & Log Meal'}
+                        </button>
+                        <button onClick={resetScanner} className={styles.scanAgainButton}>Scan Another Product</button>
+                    </div>
+                )}
             </div>
-          )}
-        </div>
-        
-        {/* Display the ProductDisplayCard and button to scan again */}
-        {product && (
-          <div className={styles.resultsSection}>
-            <ProductDisplayCard product={product} />
-            {/* Button to scan again */}
-            <button onClick={resetScanner} className={styles.scanAgainButton}>Scan Another Product</button>
-          </div>
-        )}
-      </div>
-    </main>
-  );
+        </main>
+    );
 }

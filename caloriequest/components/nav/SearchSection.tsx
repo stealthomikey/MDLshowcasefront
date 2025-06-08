@@ -32,14 +32,15 @@ export const SearchSection: React.FC<SearchSectionProps> = ({ searchTerm, result
     }
 
     if (results?.length === 0) {
-      return <p className={styles.message}>No results found for "<strong>{searchTerm}</strong>". Try another search.</p>;
+      // FIX HERE: Replace " with &quot;
+      return <p className={styles.message}>No results found for &quot;<strong>{searchTerm}</strong>&quot;. Try another search.</p>;
     }
 
     return results?.map((recipe) => (
       // updated recipe card
       <RecipeCard
                 key={recipe.id}
-                id={recipe.id} 
+                id={recipe.id}
                 title={recipe.title}
                 description={recipe.description}
                 imageUrl={recipe.imageUrl}
@@ -50,7 +51,8 @@ export const SearchSection: React.FC<SearchSectionProps> = ({ searchTerm, result
   return (
     <section className={styles.searchSection}>
       <div className="container">
-        {searchTerm && !loading && !error && <h2>Results for "{searchTerm}"</h2>}
+        {/* FIX HERE: Replace " with &quot; for consistency if searchTerm is displayed in heading */}
+        {searchTerm && !loading && !error && <h2>Results for &quot;{searchTerm}&quot;</h2>}
         <div className={styles.resultsGrid}>
           {renderContent()}
         </div>
