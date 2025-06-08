@@ -1,0 +1,81 @@
+.card {
+  background-color: #e4e6e6;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; 
+}
+
+.cardImage {
+  object-fit: cover;
+}
+
+.cardContent {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; 
+}
+
+.cardContent h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.cardContent p {
+  color: #4b5563;
+  margin: 0.5rem 0 0;
+  flex-grow: 1; 
+}
+
+.cardActions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.viewButton {
+  background-color: #2563eb; 
+  color: white;
+  border: none;
+  padding: 0.5rem 1.25rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.viewButton:hover {
+  background-color: #1d4ed8; 
+}
+
+.favoriteButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #9ca3af;
+  padding: 0.25rem; 
+  line-height: 0; 
+}
+
+.favoriteButton:hover {
+  color: #e73030;
+}
+
+
+.favoriteButton:hover svg {
+  fill: #fef2f2; 
+}

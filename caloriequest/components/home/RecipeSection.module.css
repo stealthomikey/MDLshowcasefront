@@ -1,0 +1,119 @@
+.recipeSection {
+  background-color: #3a6351;
+  padding: 4rem 0;
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.sectionHeader h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+.sectionHeader p {
+  font-size: 1.125rem;
+  color: #222222;
+  margin-top: 0.5rem;
+}
+
+.recipeGrid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 2rem;
+}
+
+.loadMoreContainer {
+  margin-top: 3rem;
+  text-align: center;
+}
+
+.loadMoreButton {
+  background-color: #427e6c; 
+  color: white;
+  border: none;
+  padding: 0.75rem 2rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.loadMoreButton:hover:not(:disabled) {
+  background-color: #1d3b32; 
+}
+
+.loadMoreButton:disabled {
+  background-color: #9ca3af;
+  cursor: not-allowed;
+}
+
+@media (min-width: 768px) {
+  .recipeGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .recipeGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.errorState {
+  text-align: center;
+  background-color: #fef2f2;
+  color: #991b1b; 
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #fecaca;
+  margin: 1rem auto;
+  max-width: 600px;
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.skeletonCard {
+  background-color: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.skeletonImage {
+  width: 100%;
+  padding-top: 56.25%; 
+  background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+.skeletonContent {
+  padding: 1.5rem;
+}
+
+.skeletonTitle {
+  height: 28px;
+  width: 70%;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: 0.25rem;
+}
+
+.skeletonText {
+  height: 20px;
+  width: 90%;
+  margin-top: 0.5rem;
+  background: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+  background-size: 2000px 100%;
+  animation: shimmer 2s linear infinite;
+  border-radius: 0.25rem;
+}

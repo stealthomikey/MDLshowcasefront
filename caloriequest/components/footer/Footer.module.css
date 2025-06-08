@@ -1,0 +1,110 @@
+.footer {
+  background-color: #3a6351; 
+  color: #d1d5db; 
+  padding: 4rem 0 2rem;
+  font-size: 0.9rem;
+}
+
+.footerContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.footerContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding-bottom: 2rem;
+}
+
+.brandName {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  margin: 0;
+}
+
+.brandSlogan {
+  margin-top: 0.5rem;
+  max-width: 250px;
+}
+
+.linksSection {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.linkGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.linkGroup h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.linkGroup a {
+  color: #d1d5db;
+  transition: color 0.2s ease-in-out;
+}
+
+.linkGroup a:hover {
+  color: white;
+}
+
+.footerBottom {
+  border-top: 1px solid #3a6351; 
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.copyright {
+  margin: 0;
+  text-align: center;
+}
+
+.socialIcons {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.socialIcons a {
+  color: #d1d5db;
+  transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
+}
+
+.socialIcons a:hover {
+  color: white;
+  transform: translateY(-2px);
+}
+
+@media (min-width: 640px) {
+  .footerContent {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .linksSection {
+    flex-direction: row;
+    gap: 4rem;
+  }
+
+  .footerBottom {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .copyright {
+    text-align: left;
+  }
+}
