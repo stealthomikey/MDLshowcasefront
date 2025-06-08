@@ -4,13 +4,13 @@ import { headers } from 'next/headers';
 import { ChefHat, ArrowLeft } from 'lucide-react';
 import styles from './recipeDetail.module.css';
 
-// Define interfaces for recipe data
+// Define interfaces for menu data
 interface Ingredient {
   name: string;
   measure: string;
 }
 
-interface FullRecipe {
+interface FullMenu {
   idMeal: string;
   strMeal: string;
   strInstructions: string;
@@ -20,32 +20,32 @@ interface FullRecipe {
 }
 
 // Define props interface for the page component
-interface RecipePageProps {
-  params: { recipeId: string };
+interface MenuPageProps {
+  params: { menuId: string };
 }
 
-// Fetch recipe data from the API
-async function fetchRecipe(recipeId: string): Promise<FullRecipe> {
-  const res = await fetch(`http://127.0.0.1:8000/meals/${recipeId}`, { cache: 'no-store' });
+// Fetch menu data from the API
+async function fetchMenu(menuId: string): Promise<FullMenu> {
+  const res = await fetch(`http://127.0.0.1:8000/meals/${menuId}`, { cache: 'no-store' });
   if (!res.ok) {
-    throw new Error(`Failed to fetch recipe with ID ${recipeId}`);
+    throw new Error(`Failed to fetch menu with ID ${menuId}`);
   }
   return res.json();
 }
 
 // Page component
-export default async function RecipeDetailPage({ params }: RecipePageProps) {
-  let recipe: FullRecipe | null = null;
+export default async function MenuDetailPage({ params }: MenuPageProps) {
+  let menu: FullMenu | null = null;
   let error: string | null = null;
 
   try {
-    recipe = await fetchRecipe(params.recipeId);
+    menu = await fetchMenu(params.menuId);
   } catch (err) {
     error = err instanceof Error ? err.message : 'An unexpected error occurred';
   }
 
   // Render error state if fetch failed
-  if (error || !recipe) {
+  if (error || !menu) {
     return (
       <main className="container">
         <div className={styles.pageContainer}>
@@ -53,7 +53,7 @@ export default async function RecipeDetailPage({ params }: RecipePageProps) {
             <ArrowLeft size={16} /> Back to Home
           </Link>
           <h1 className={styles.title}>Error</h1>
-          <p>{error || 'Recipe not found'}</p>
+          <p>{error || 'Menu not found'}</p>
         </div>
       </main>
     );
@@ -79,7 +79,7 @@ export default async function RecipeDetailPage({ params }: RecipePageProps) {
   }
 
   // Split instructions into steps
-  const instructionSteps = recipe.strInstructions
+  const instructionSteps = menu.strInstructions
     .split('\r\n')
     .filter(step => step.trim() !== '');
 
@@ -89,14 +89,14 @@ export default async function RecipeDetailPage({ params }: RecipePageProps) {
         <Link href={backHref} className={styles.backLink}>
           <ArrowLeft size={16} /> {backText}
         </Link>
-        <h1 className={styles.title}>{recipe.strMeal}</h1>
+        <h1 className={styles.title}>{menu.strMeal}</h1>
 
         <div className={styles.contentGrid}>
           <div className={styles.imageAndMeta}>
             <div className={styles.imageWrapper}>
               <Image
-                src={recipe.strMealThumb}
-                alt={`Image of ${recipe.strMeal}`}
+                src={menu.strMealThumb}
+                alt={`Image of ${menu.strMeal}`}
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 priority
@@ -107,7 +107,7 @@ export default async function RecipeDetailPage({ params }: RecipePageProps) {
           <div className={styles.details}>
             <h2>Ingredients</h2>
             <ul className={styles.ingredientsList}>
-              {recipe.ingredients.map((ing, index) => (
+              {menu.ingredients.map((ing, index) => (
                 <li key={index}>
                   <span className={styles.measure}>{ing.measure}</span>
                   <span className={styles.name}>{ing.name}</span>
