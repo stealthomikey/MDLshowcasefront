@@ -1,3 +1,4 @@
+// types/index.ts 
 // shape of data on the frontend get food info
 export interface Nutriments {
     'energy-kcal_100g'?: number | null;
