@@ -20,6 +20,13 @@ interface FullRecipe {
   ingredients: Ingredient[];
 }
 
+// Define the props interface for the RecipeDetailPage component
+interface RecipeDetailPageProps {
+  params: {
+    recipeId: string;
+  };
+}
+
 // fetch the recipe data from the api
 async function getRecipe(recipeId: string): Promise<FullRecipe> {
   const res = await fetch(`http://127.0.0.1:8000/meals/${recipeId}`, { cache: 'no-store' });
@@ -31,12 +38,12 @@ async function getRecipe(recipeId: string): Promise<FullRecipe> {
 }
 
 // recipe detail page component
-export default async function RecipeDetailPage({ params }: { params: { recipeId: string } }) {
+export default async function RecipeDetailPage({ params }: RecipeDetailPageProps) {
   // gets id from the url
   const recipe = await getRecipe(params.recipeId);
 
   // logic for the back link based on the referal link
-  const headerList = headers(); // No need for 'await' here
+  const headerList = headers();
   // get the page the user came from
   const referer = headerList.get('referer');
 
