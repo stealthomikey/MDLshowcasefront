@@ -73,7 +73,7 @@ export default async function RecipeDetailPage({ params }: RecipePageProps) {
         backHref = referer;
         backText = 'Back to Search Results';
       }
-    } catch (err) {
+    } catch {
       // Ignore invalid referer URLs
     }
   }
