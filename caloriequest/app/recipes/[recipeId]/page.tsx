@@ -1,4 +1,3 @@
-"use client";
 // imports
 import Image from 'next/image';
 import Link from 'next/link';
@@ -37,7 +36,7 @@ export default async function RecipeDetailPage({ params }: { params: { recipeId:
   const recipe = await getRecipe(params.recipeId);
 
   // logic for the back link based on the referal link
-  const headerList = await headers();
+  const headerList = headers(); // No need for 'await' here
   // get the page the user came from
   const referer = headerList.get('referer');
 
@@ -48,7 +47,8 @@ export default async function RecipeDetailPage({ params }: { params: { recipeId:
   // ensure link is valid
   if (referer) {
     const refererUrl = new URL(referer);
-    if (refererUrl.pathname === '/search') {
+    // Check if the hostname is the same to avoid external referers
+    if (refererUrl.origin === new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').origin && refererUrl.pathname === '/search') {
       // if they came from the search page set text to 'Back to Search Results'
       backHref = referer;
       backText = 'Back to Search Results';
