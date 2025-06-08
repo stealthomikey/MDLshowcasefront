@@ -1,7 +1,7 @@
 // imports
 import Image from 'next/image';
 import Link from 'next/link';
-import { headers } from 'next/headers'; 
+import { headers } from 'next/headers';
 import { ChefHat, Link as ArrowLeft } from 'lucide-react';
 import styles from './recipeDetail.module.css';
 
@@ -24,39 +24,32 @@ interface FullRecipe {
 async function getRecipe(recipeId: string): Promise<FullRecipe> {
   const res = await fetch(`http://127.0.0.1:8000/meals/${recipeId}`, { cache: 'no-store' });
   if (!res.ok) {
-    // error handling
     throw new Error('Failed to fetch recipe');
   }
   return res.json();
 }
 
 // recipe detail page component
-// Type the 'params' directly in the function signature for clarity and directness
-export default async function RecipeDetailPage({ params }: { params: { recipeId: string } }) {
-  // gets id from the url
+export default async function RecipeDetailPage({ params }) {
   const recipe = await getRecipe(params.recipeId);
 
-  // logic for the back link based on the referal link
   const headerList = headers();
-  // get the page the user came from
   const referer = headerList.get('referer');
 
-  // default back link
   let backHref = '/';
   let backText = 'Back to Home';
 
-  // ensure link is valid
   if (referer) {
     const refererUrl = new URL(referer);
-    // Check if the hostname is the same to avoid external referers
-    if (refererUrl.origin === new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').origin && refererUrl.pathname === '/search') {
-      // if they came from the search page set text to 'Back to Search Results'
+    if (
+      refererUrl.origin === new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000').origin &&
+      refererUrl.pathname === '/search'
+    ) {
       backHref = referer;
       backText = 'Back to Search Results';
     }
   }
 
-  // Split the instructions 
   const instructionSteps = recipe.strInstructions.split('\r\n').filter(step => step.trim() !== '');
 
   return (
@@ -72,18 +65,15 @@ export default async function RecipeDetailPage({ params }: { params: { recipeId:
           <div className={styles.imageAndMeta}>
             <div className={styles.imageWrapper}>
               <Image
-              // get image from the api
                 src={recipe.strMealThumb}
                 alt={`Image of ${recipe.strMeal}`}
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
-                // load image first
-                priority 
+                priority
               />
             </div>
           </div>
 
-          {/* Recipe details section */}
           <div className={styles.details}>
             <h2>Ingredients</h2>
             <ul className={styles.ingredientsList}>
@@ -97,7 +87,6 @@ export default async function RecipeDetailPage({ params }: { params: { recipeId:
           </div>
         </div>
 
-          {/* recipe instructions section */}
         <section className={styles.instructionsSection}>
           <h2>
             <ChefHat size={28} />
