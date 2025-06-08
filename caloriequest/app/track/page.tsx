@@ -1,4 +1,4 @@
-// app/products/page.tsx
+// app/track/page.tsx
 'use client'; // Required for client-side rendering in Next.js App Router
 
 import { useState, useEffect, useCallback } from 'react';
@@ -15,7 +15,8 @@ export default function ProductsPage() {
     const [loadingProducts, setLoadingProducts] = useState(true);
     const [errorProducts, setErrorProducts] = useState<string | null>(null);
 
-    const API_BASE_URL = 'http://127.0.0.1:8000'; // Your FastAPI backend URL
+    // IMPORTANT: Update this to your Render API URL (e.g., https://your-api-name.onrender.com)
+    const API_BASE_URL = 'http://127.0.0.1:8000'; 
 
     // Function to fetch products, wrapped in useCallback for stability
     const fetchUserProducts = useCallback(async () => {
@@ -48,9 +49,10 @@ export default function ProductsPage() {
 
             const data: ProductOut[] = await res.json();
             setUserProducts(data);
-        } catch (err: any) {
+        } catch (err: unknown) { // <--- FIX 1: Change 'any' to 'unknown' for better type safety
             console.error("Error fetching user products:", err);
-            setErrorProducts(err.message || "An unexpected error occurred while fetching products.");
+            // Type assertion for error to be treated as an Error object
+            setErrorProducts(err instanceof Error ? err.message : "An unexpected error occurred while fetching products.");
         } finally {
             setLoadingProducts(false);
         }
@@ -120,7 +122,8 @@ export default function ProductsPage() {
                 <h1>My Products</h1>
 
                 {userProducts.length === 0 ? (
-                    <p className={styles.noProductsMessage}>You haven't added any products yet. Go to the <a href="/scan">Scan page</a> to add some!</p>
+                    // FIX 2: Escaped apostrophe
+                    <p className={styles.noProductsMessage}>You haven&apos;t added any products yet. Go to the <a href="/scan">Scan page</a> to add some!</p>
                 ) : (
                     <div className={styles.productListGrid}>
                         {userProducts.map((product) => (

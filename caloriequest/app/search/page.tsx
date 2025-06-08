@@ -46,7 +46,8 @@ export default function SearchPage() {
     }
 
     if (searchResults?.length === 0) {
-      return <p className={styles.message}>No results found for "<strong>{query}</strong>". Please try another search term.</p>;
+      // FIX HERE: Replaced " with &quot;
+      return <p className={styles.message}>No results found for &quot;<strong>{query}</strong>&quot;. Please try another search term.</p>;
     }
 
     // If we have results, map over them and render a RecipeCard for each
@@ -60,13 +61,13 @@ export default function SearchPage() {
       />
     ));
   };
-  
+
   return (
     <main className="container">
       <section className={styles.searchPage}>
         <h1 className={styles.title}>
-          {/* Display a dynamic title based on whether there's a search query */}
-          {query ? `Search Results for "${query}"` : 'Search for a recipe'}
+          {/* FIX HERE: Replaced " with &quot; */}
+          {query ? `Search Results for &quot;${query}&quot;` : 'Search for a recipe'}
         </h1>
         <div className={styles.resultsGrid}>
           {renderContent()}

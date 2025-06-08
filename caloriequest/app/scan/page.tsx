@@ -6,7 +6,7 @@ import type { FoodProduct } from '@/types/index';
 import { ProductDisplayCard } from '@/components/scan/ProductDisplayCard';
 import { BarcodeScannerWrapper } from '@/components/scan/BarcodeScannerWrapper';
 // Import your new hook
-import { useProductCreationAndLogging } from '@/hooks/useProductCreationAndLogging'; 
+import { useProductCreationAndLogging } from '@/hooks/useProductCreationAndLogging';
 import styles from './scan.module.css';
 
 // It's good practice to have a common place for your API base URL (can be moved to a config file)
@@ -22,7 +22,7 @@ export default function ScanPage() {
     const { loading: loadingProductAction, error: productActionError, createAndLogProduct } = useProductCreationAndLogging();
 
     // Default quantity for logging a meal. You might want to allow user input here.
-    const DEFAULT_MEAL_QUANTITY_GRAMS = 100; 
+    const DEFAULT_MEAL_QUANTITY_GRAMS = 100;
 
     // handleScan logic (remains mostly the same for fetching product info from barcode)
     const handleScan = useCallback(async (barcode: string) => {
@@ -48,9 +48,10 @@ export default function ScanPage() {
             }
             const data: FoodProduct = await res.json();
             setProduct(data);
-        } catch (err: any) {
+        } catch (err: unknown) { // <--- FIX 1: Change 'any' to 'unknown' for better type safety
             console.error("Error during product fetch:", err);
-            setError(err.message);
+            // Type assertion for error to be treated as an Error object
+            setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
         } finally {
             setLoadingProductFetch(false);
         }
@@ -70,6 +71,7 @@ export default function ScanPage() {
         await createAndLogProduct(product, DEFAULT_MEAL_QUANTITY_GRAMS);
 
         // Reset UI after actions, if no new error from the action itself
+        // Check if there was an error from the hook's action to decide UI reset
         if (!productActionError) { // Only reset product/scanner if database action was successful (or no new error emerged)
             setProduct(null);
             setScanComplete(false); // Show scanner again
@@ -85,7 +87,7 @@ export default function ScanPage() {
         <main className="container">
             <div className={styles.scanPage}>
                 <h1>Scan a Product Barcode</h1>
-                <p className={styles.subtitle}>Hold a product's barcode up to the camera.</p>
+                <p className={styles.subtitle}>Hold a product&apos;s barcode up to the camera.</p> {/* <--- FIX 2: Escaped apostrophe */}
 
                 <div className={styles.scannerContainer}>
                     {!scanComplete && (
