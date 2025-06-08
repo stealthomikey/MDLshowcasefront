@@ -30,7 +30,7 @@ async function getRecipe(recipeId: string): Promise<FullRecipe> {
 }
 
 // recipe detail page component
-export default async function RecipeDetailPage({ params }) {
+export default async function RecipeDetailPage({ params }: { params: { recipeId: string } }) {
   const recipe = await getRecipe(params.recipeId);
 
   const headerList = headers();
