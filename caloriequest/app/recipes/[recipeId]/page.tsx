@@ -1,9 +1,12 @@
 // imports
 import Image from 'next/image';
 import Link from 'next/link';
-import { headers } from 'next/headers'; 
+import { headers } from 'next/headers';
 import { ChefHat, Link as ArrowLeft } from 'lucide-react';
 import styles from './recipeDetail.module.css';
+
+// NEW IMPORT for PageProps:
+import type { PageProps } from 'next/dist/lib/types'; // Import PageProps
 
 // define the structure of the ingredients and recipe data from the api
 interface Ingredient {
@@ -21,8 +24,10 @@ interface FullRecipe {
 }
 
 // fetch the recipe data from the api
+// IMPORTANT: Update this API_BASE_URL to your Render API URL (e.g., https://your-api-name.onrender.com)
+const API_BASE_URL = 'http://127.0.0.1:8000'; // Define it here or import from a config
 async function getRecipe(recipeId: string): Promise<FullRecipe> {
-  const res = await fetch(`http://127.0.0.1:8000/meals/${recipeId}`, { cache: 'no-store' });
+  const res = await fetch(`${API_BASE_URL}/meals/${recipeId}`, { cache: 'no-store' });
   if (!res.ok) {
     // error handling
     throw new Error('Failed to fetch recipe');
@@ -31,7 +36,8 @@ async function getRecipe(recipeId: string): Promise<FullRecipe> {
 }
 
 // recipe detail page component
-export default async function RecipeDetailPage({ params }: { params: { recipeId: string } }) {
+// FIX: Apply PageProps type to the component
+export default async function RecipeDetailPage({ params }: PageProps<{ recipeId: string }>) {
   // gets id from the url
   const recipe = await getRecipe(params.recipeId);
 
@@ -54,7 +60,7 @@ export default async function RecipeDetailPage({ params }: { params: { recipeId:
     }
   }
 
-  // Split the instructions 
+  // Split the instructions
   const instructionSteps = recipe.strInstructions.split('\r\n').filter(step => step.trim() !== '');
 
   return (
@@ -76,7 +82,7 @@ export default async function RecipeDetailPage({ params }: { params: { recipeId:
                 fill
                 sizes="(min-width: 768px) 50vw, 100vw"
                 // load image first
-                priority 
+                priority
               />
             </div>
           </div>
@@ -95,7 +101,7 @@ export default async function RecipeDetailPage({ params }: { params: { recipeId:
           </div>
         </div>
 
-          {/* recipe instructions section */}
+        {/* recipe instructions section */}
         <section className={styles.instructionsSection}>
           <h2>
             <ChefHat size={28} />
