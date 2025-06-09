@@ -1,10 +1,10 @@
+// app/layout.tsx
 import type { Metadata } from 'next';
-import './globals.css';
-
+import './globals.css'; // Make sure this is correctly imported
 import Navbar from '@/components/nav/Navbar';
 import Footer from '@/components/footer/Footer';
+import styles from './page.module.css'; // This is where .content comes from
 
-// This sets the default title and description for your entire application
 export const metadata: Metadata = {
   title: "Calorie Quest",
   description: "Finding recipes and tracking calories made easy",
@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Navbar />
-        <main>
+        <main className={styles.content}> {/* This 'main' element gets flex-grow */}
           {children}
         </main>
         <Footer />

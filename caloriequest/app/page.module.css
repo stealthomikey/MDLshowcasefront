@@ -1,0 +1,6 @@
+/* app/page.module.css */
+
+main.main-content { /* Or whatever class you use for your main content area */
+  flex-grow: 1; /* This makes the content area expand and push the footer down */
+  /* min-height: 0; /* Sometimes needed for flex-grow to work properly in certain browsers */
+}

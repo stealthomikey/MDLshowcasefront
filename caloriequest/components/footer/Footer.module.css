@@ -1,10 +1,11 @@
 .footer {
-  background-color: #3a6351; 
-  color: #d1d5db; 
+  margin-top: auto;
+  background-color: #3a6351;
+  color: #d1d5db;
   padding: 4rem 0 2rem;
   font-size: 0.9rem;
+  flex-shrink: 0; 
 }
-
 .footerContainer {
   display: flex;
   flex-direction: column;

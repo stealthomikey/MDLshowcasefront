@@ -36,6 +36,7 @@ const Navbar = () => {
             <Link href="/">Home</Link>
             <Link href="/scan">scan</Link>
             <Link href="/track">track</Link>
+            <Link href="/foodlogs">log</Link>
           </nav>
 
 
@@ -72,7 +73,8 @@ const Navbar = () => {
           <Link href="/" onClick={toggleMenu}>Home</Link>
           <Link href="/scan" onClick={toggleMenu}>scan</Link>
           <Link href="/track" onClick={toggleMenu}>track</Link>
-          <Link href="/profile" onClick={toggleMenu}>My Account</Link>
+          <Link href="/foodlogs" onClick={toggleMenu}>log</Link>
+          <Link href="/" onClick={toggleMenu}>My Account</Link>
         </nav>
       </div>
     </>

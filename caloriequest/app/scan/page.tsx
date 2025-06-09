@@ -5,7 +5,7 @@ import { useState, useCallback } from 'react';
 import type { FoodProduct } from '@/types/index';
 import { ProductDisplayCard } from '@/components/scan/ProductDisplayCard';
 import { BarcodeScannerWrapper } from '@/components/scan/BarcodeScannerWrapper';
-// Import your new hook
+// Import your new hook (still keeping it, but its function won't be called for now)
 import { useProductCreationAndLogging } from '@/hooks/useProductCreationAndLogging';
 import styles from './scan.module.css';
 
@@ -18,11 +18,8 @@ export default function ScanPage() {
     const [error, setError] = useState<string | null>(null); // Error for fetching product data
     const [scanComplete, setScanComplete] = useState(false);
 
-    // Use the new hook for product creation and meal logging
-    const { loading: loadingProductAction, error: productActionError, createAndLogProduct } = useProductCreationAndLogging();
-
-    // Default quantity for logging a meal. You might want to allow user input here.
-    const DEFAULT_MEAL_QUANTITY_GRAMS = 100;
+    // Use the new hook for product creation and meal logging (still keeping it, but its function won't be called directly for now)
+    const { loading: loadingProductAction, error: productActionError } = useProductCreationAndLogging();
 
     // handleScan logic (remains mostly the same for fetching product info from barcode)
     const handleScan = useCallback(async (barcode: string) => {
@@ -31,7 +28,7 @@ export default function ScanPage() {
 
         setScanComplete(true);
         setLoadingProductFetch(true);
-        setError(null); // Clear previous errors (including those from database actions)
+        setError(null);
         setProduct(null);
 
         try {
@@ -48,35 +45,34 @@ export default function ScanPage() {
             }
             const data: FoodProduct = await res.json();
             setProduct(data);
-        } catch (err: unknown) { // <--- FIX 1: Change 'any' to 'unknown' for better type safety
+        } catch (err: unknown) {
             console.error("Error during product fetch:", err);
-            // Type assertion for error to be treated as an Error object
             setError(err instanceof Error ? err.message : 'An unexpected error occurred.');
         } finally {
             setLoadingProductFetch(false);
         }
-    }, [loadingProductFetch, loadingProductAction]); // Dependencies updated to reflect changes
+    }, [loadingProductFetch, loadingProductAction]);
 
     // Determine which error to display
     const displayError = error || productActionError;
 
     // Handler for the "Add Product & Log Meal" button click
-    const onAddProductAndLogMealClick = useCallback(async () => {
-        if (!product) {
-            setError("No product data to process. Scan a product first.");
-            return;
-        }
+    const onAddProductAndLogMealClick = useCallback(() => {
+        // --- NEW ALERT HERE ---
+        alert("Food logging is currently under construction. Please check back later!");
+        // --- END NEW ALERT ---
 
-        // Call the hook's function to perform the combined actions
-        await createAndLogProduct(product, DEFAULT_MEAL_QUANTITY_GRAMS);
-
-        // Reset UI after actions, if no new error from the action itself
-        // Check if there was an error from the hook's action to decide UI reset
-        if (!productActionError) { // Only reset product/scanner if database action was successful (or no new error emerged)
-            setProduct(null);
-            setScanComplete(false); // Show scanner again
-        }
-    }, [product, createAndLogProduct, DEFAULT_MEAL_QUANTITY_GRAMS, productActionError]); // Dependencies
+        // The original logic to call createAndLogProduct is commented out for now
+        // if (!product) {
+        //     setError("No product data to process. Scan a product first.");
+        //     return;
+        // }
+        // await createAndLogProduct(product, DEFAULT_MEAL_QUANTITY_GRAMS);
+        // if (!productActionError) {
+        //     setProduct(null);
+        //     setScanComplete(false);
+        // }
+    }, [/* No dependencies needed for just an alert */]); // Dependencies simplified as no logic is called
 
     // Resets the scanner by reloading the page
     const resetScanner = useCallback(() => {
@@ -87,7 +83,7 @@ export default function ScanPage() {
         <main className="container">
             <div className={styles.scanPage}>
                 <h1>Scan a Product Barcode</h1>
-                <p className={styles.subtitle}>Hold a product&apos;s barcode up to the camera.</p> {/* <--- FIX 2: Escaped apostrophe */}
+                <p className={styles.subtitle}>Hold a product&apos;s barcode up to the camera.</p>
 
                 <div className={styles.scannerContainer}>
                     {!scanComplete && (
@@ -118,9 +114,10 @@ export default function ScanPage() {
                         <button
                             onClick={onAddProductAndLogMealClick}
                             className={styles.addProductButton}
-                            disabled={loadingProductAction} // Use loading state from hook
+                            // No longer checking loadingProductAction as we're just showing an alert
+                            // disabled={loadingProductAction}
                         >
-                            {loadingProductAction ? 'Processing...' : 'Add Product & Log Meal'}
+                            Add Product & Log Meal {/* Text remains the same for now */}
                         </button>
                         <button onClick={resetScanner} className={styles.scanAgainButton}>Scan Another Product</button>
                     </div>
